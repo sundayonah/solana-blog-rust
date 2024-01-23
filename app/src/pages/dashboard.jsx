@@ -6,6 +6,8 @@ import { PostForm } from 'src/components/PostForm';
 import { useBlog } from 'src/context/Blog';
 import { useHistory } from 'react-router-dom';
 
+//    { "name": "POST_SEED", "type": "bytes", "value": "[112, 111, 115, 116]" }
+
 export const Dashboard = () => {
    const history = useHistory();
    const [connecting, setConnecting] = useState(false);
@@ -21,6 +23,7 @@ export const Dashboard = () => {
    } = useBlog();
    const [postTitle, setPostTitle] = useState('');
    const [postContent, setPostContent] = useState('');
+   const [postName, setPostName] = useState('');
 
    const onConnect = () => {
       setConnecting(true);
@@ -32,6 +35,8 @@ export const Dashboard = () => {
          setConnecting(false);
       }
    }, [user]);
+
+   // console.log({ posts, user });
 
    return (
       <div className="dashboard background-color overflow-auto h-screen">
@@ -109,29 +114,11 @@ export const Dashboard = () => {
             <div className="pt-3">
                {/* <h1 className="title">The Blog</h1> */}
                <div className="row">
-                  {/* <article className="best-post">
-              <div
-                className="best-post-image"
-                style={{
-                  backgroundImage: `url("https://user-images.githubusercontent.com/62637513/184338364-a14b7272-d1dc-49f3-9f43-3ac37dacbe85.png")`,
-                }}
-              ></div>
-              <div className="best-post-content">
-                <div className="best-post-content-cat">December 2, 2021<span className="dot"> </span>Blog</div>
-                <div className="best-post-content-title">
-                  Lorem ipsum dolor sit amet, consectetur
-                </div>
-                <div className="best-post-content-sub">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </div>
-              </div>
-            </article> */}
-
-                  <div className="all__posts">
+                  <div className="all__posts ">
                      {posts.map((item) => {
                         return (
                            <article
-                              className="post__card-2"
+                              className="post__card-2 "
                               onClick={() => {
                                  history.push(
                                     `/read-post/${item.publicKey.toString()}`
@@ -140,21 +127,44 @@ export const Dashboard = () => {
                               key={item.account.id}
                            >
                               <div className="post__card_-2">
-                                 <div
+                                 {/* <div
                                     className="post__card__image-2"
-                                    style={{
-                                       backgroundImage: `url("https://user-images.githubusercontent.com/62637513/184338539-9cdbdc58-1e72-4c48-8203-0b7ec23d3eb0.png")`,
-                                    }}
-                                 ></div>
+                                    // style={{
+                                    //    backgroundImage: `url("https://user-images.githubusercontent.com/62637513/184338539-9cdbdc58-1e72-4c48-8203-0b7ec23d3eb0.png")`,
+                                    // }}
+                                 >
+                                    <img src={item.account.image_data} alt="" />
+                                    {item.account.image_data && (
+                                       <img
+                                          src={item.account.image}
+                                          alt="Post AVATAR"
+                                       />
+                                    )}
+                                 </div> */}
                                  <div>
                                     <div className="post__card_meta-2">
-                                       <div className="post__card_cat">
-                                          December 2, 2021
-                                          <span className="dot"> </span>
-                                          {item.account.title}{' '}
+                                       <div className="flex flex-col justify-center">
+                                          <div>
+                                             <span className="dot"> </span>
+                                             {item.account.name}{' '}
+                                          </div>
+                                          <div>
+                                             <span className="dot"> </span>
+                                             {item.account.title}{' '}
+                                          </div>
+                                          <span className="text-xs">
+                                             {new Date(
+                                                item.account.timestamp * 1000
+                                             ).toLocaleDateString()}{' '}
+                                          </span>
                                        </div>
                                        <p className="post__card_alttitle-2">
-                                          {item.account.content}
+                                          {item.account.content.length > 30
+                                             ? `${item.account.content.substring(
+                                                  0,
+                                                  120
+                                               )}...`
+                                             : item.account.content}
                                        </p>
                                     </div>
                                  </div>
@@ -178,7 +188,12 @@ export const Dashboard = () => {
                      postContent={postContent}
                      setPostTitle={setPostTitle}
                      setPostContent={setPostContent}
-                     onSubmit={() => createPost(postTitle, postContent)}
+                     //  handleImageChange={handleImageChange}
+                     postName={postName}
+                     setPostName={setPostName}
+                     onSubmit={() =>
+                        createPost(postName, postTitle, postContent)
+                     }
                   />
                </div>
             </div>
